@@ -1,125 +1,71 @@
 import pandas as pd
 import joblib
-import matplotlib.pyplot as plt
-import os
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, classification_report
 
 from xgboost import XGBClassifier
 
+# Load dataset
+df = pd.read_csv("data/student_data.csv", sep=";")
 
-# LOAD DATASET
-df = pd.read_csv(
-    "data/student_data.csv",
-    sep=";"
-)
+print("Dataset Loaded Successfully")
+print("Shape:", df.shape)
 
+# Create target column
+df["dropout"] = (df["G3"] < 10).astype(int)
 
-# CREATE DROPOUT TARGET
-df["dropout"] = df["G3"].apply(
-    lambda x: 1 if x < 10 else 0
-)
+# Encode categorical columns
+label_encoders = {}
 
+for col in df.select_dtypes(include="object").columns:
+    le = LabelEncoder()
+    df[col] = le.fit_transform(df[col])
+    label_encoders[col] = le
 
-# SELECT IMPORTANT COLUMNS ONLY
-df = df[[
-    "age",
-    "studytime",
-    "failures",
-    "absences",
-    "G1",
-    "G2",
-    "dropout"
-]]
+# Features (remove G3 and target)
+X = df.drop(["dropout", "G3"], axis=1)
 
-
-# FEATURES
-X = df.drop("dropout", axis=1)
-
-
-# TARGET
+# Target
 y = df["dropout"]
 
-
-# SPLIT DATA
+# Split data
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
     test_size=0.2,
+    random_state=42,
+    stratify=y
+)
+
+# Train model
+model = XGBClassifier(
+    n_estimators=100,
+    max_depth=4,
+    learning_rate=0.1,
     random_state=42
 )
 
+model.fit(X_train, y_train)
 
-# RANDOM FOREST
-rf_model = RandomForestClassifier()
+# Predictions
+y_pred = model.predict(X_test)
 
-rf_model.fit(X_train, y_train)
+# Accuracy
+accuracy = accuracy_score(y_test, y_pred)
 
+print("\nAccuracy:", round(accuracy * 100, 2), "%")
 
-# PREDICTION
-rf_predictions = rf_model.predict(X_test)
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
 
+# Save model
+joblib.dump(model, "model.pkl")
 
-# ACCURACY
-print("Random Forest Accuracy:")
+# Save feature names
+joblib.dump(list(X.columns), "features.pkl")
 
-print(
-    accuracy_score(
-        y_test,
-        rf_predictions
-    )
-)
-
-
-# XGBOOST
-xgb_model = XGBClassifier()
-
-xgb_model.fit(X_train, y_train)
-
-
-# XGBOOST ACCURACY
-xgb_predictions = xgb_model.predict(X_test)
-
-print("XGBoost Accuracy:")
-
-print(
-    accuracy_score(
-        y_test,
-        xgb_predictions
-    )
-)
-
-
-# CREATE MODELS FOLDER
-os.makedirs(
-    "models",
-    exist_ok=True
-)
-
-
-# SAVE MODEL
-joblib.dump(
-    rf_model,
-    "models/dropout_model.pkl"
-)
-
-
-print("Model Saved Successfully!")
-
-
-# FEATURE IMPORTANCE
-importance = rf_model.feature_importances_
-
-features = X.columns
-
-
-plt.figure(figsize=(8, 5))
-
-plt.barh(features, importance)
-
-plt.title("Feature Importance")
-
-plt.show()
+print("\nModel Saved Successfully")
+print("model.pkl created")
+print("features.pkl created")
