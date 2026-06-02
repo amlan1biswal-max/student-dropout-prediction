@@ -197,9 +197,6 @@ st.markdown("""
 Built using Python, Streamlit, Scikit-Learn and XGBoost
 </p>
 
-<p>
-Developed by <b>Amlan Biswal</b>
-</p>
 
 <p>
 Made with ❤️ for Machine Learning & Educational Analytics
