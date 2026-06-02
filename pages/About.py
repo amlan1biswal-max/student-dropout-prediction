@@ -142,7 +142,7 @@ with col1:
 
     st.markdown("""
     <div class="dev-card">
-    <h3>Ipshita Mishra</h3>
+    <h3>Priyanshu Priyadarshani Choudhury</h3>
     <p>Project Developer</p>
     </div>
     """, unsafe_allow_html=True)
@@ -151,14 +151,14 @@ with col2:
 
     st.markdown("""
     <div class="dev-card">
-    <h3>Rachita Swain</h3>
+    <h3>Ipshita Mishra</h3>
     <p>Project Developer</p>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("""
     <div class="dev-card">
-    <h3>Priyanshu Priyadarshani Choudhury</h3>
+    <h3>Rachita Swain</h3>
     <p>Project Developer</p>
     </div>
     """, unsafe_allow_html=True)
