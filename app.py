@@ -6,7 +6,10 @@ st.set_page_config(
     layout="wide"
 )
 
+# ==========================
 # Custom CSS
+# ==========================
+
 st.markdown("""
 <style>
 
@@ -19,24 +22,31 @@ color:white;
 margin-bottom:25px;
 }
 
-.metric-card{
-background:#f8fafc;
-padding:20px;
+.metric-box{
+background:white;
+padding:25px;
 border-radius:15px;
 text-align:center;
-box-shadow:0px 2px 8px rgba(0,0,0,0.1);
+box-shadow:0px 2px 10px rgba(0,0,0,0.1);
+margin-bottom:10px;
 }
 
 .footer{
 text-align:center;
-color:gray;
-padding:20px;
+padding:25px;
+border-radius:15px;
+background:#f8fafc;
+color:#555;
+margin-top:20px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
+# ==========================
 # Hero Section
+# ==========================
+
 st.markdown("""
 <div class='hero'>
 
@@ -81,21 +91,43 @@ font-weight:bold;">
 </div>
 """, unsafe_allow_html=True)
 
-# Metrics
+# ==========================
+# Metrics Cards
+# ==========================
+
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.metric("🎯 Accuracy", "92.41%")
+    st.markdown("""
+    <div class="metric-box">
+    <h4>🎯 Accuracy</h4>
+    <h1>92.41%</h1>
+    </div>
+    """, unsafe_allow_html=True)
 
 with col2:
-    st.metric("📚 Dataset", "395 Students")
+    st.markdown("""
+    <div class="metric-box">
+    <h4>📚 Dataset</h4>
+    <h1>395</h1>
+    <p>Students</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 with col3:
-    st.metric("🤖 Model", "XGBoost")
+    st.markdown("""
+    <div class="metric-box">
+    <h4>🤖 Model</h4>
+    <h1>XGBoost</h1>
+    </div>
+    """, unsafe_allow_html=True)
 
 st.divider()
 
+# ==========================
 # Features
+# ==========================
+
 st.subheader("📌 Project Features")
 
 col1, col2 = st.columns(2)
@@ -112,7 +144,10 @@ with col2:
 
 st.divider()
 
+# ==========================
 # About Project
+# ==========================
+
 st.subheader("📖 About Project")
 
 st.write("""
@@ -121,15 +156,54 @@ This machine learning project predicts whether a student is at risk of dropping 
 The model is trained using academic performance, attendance records,
 and demographic information.
 
-The system helps educational institutions identify students who may
-need additional support and intervention.
+Educational institutions can use this system for early intervention,
+helping students improve their academic outcomes.
 """)
 
 st.divider()
 
+# ==========================
+# Project Statistics
+# ==========================
+
+st.subheader("📊 Project Highlights")
+
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.info("🎓 395 Students")
+
+with col2:
+    st.info("📈 32 Features")
+
+with col3:
+    st.info("🤖 XGBoost Model")
+
+with col4:
+    st.info("🚀 Live Deployment")
+
+st.divider()
+
+# ==========================
 # Footer
+# ==========================
+
 st.markdown("""
-<div class='footer'>
-Made with ❤️ using Streamlit, Python and XGBoost
+<div class="footer">
+
+<h3>🎓 Student Dropout Prediction System</h3>
+
+<p>
+Built using Python, Streamlit, Scikit-Learn and XGBoost
+</p>
+
+<p>
+Developed by <b>Amlan Biswal</b>
+</p>
+
+<p>
+Made with ❤️ for Machine Learning & Educational Analytics
+</p>
+
 </div>
 """, unsafe_allow_html=True)
