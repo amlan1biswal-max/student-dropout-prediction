@@ -31,14 +31,6 @@ color:white;
 margin-bottom:25px;
 }
 
-.metric-card{
-background:#f8fafc;
-padding:20px;
-border-radius:15px;
-box-shadow:0px 4px 12px rgba(0,0,0,0.08);
-text-align:center;
-}
-
 .risk-low{
 background:#dcfce7;
 padding:20px;
@@ -79,7 +71,7 @@ st.markdown("""
 
 <p>
 Predict whether a student is at risk of dropping out
-using academic performance and attendance information.
+using academic performance, attendance and support information.
 </p>
 
 </div>
@@ -91,53 +83,77 @@ using academic performance and attendance information.
 
 st.subheader("📋 Student Information")
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 with col1:
 
-    st.markdown("## 📚 Academic Details")
+    st.markdown("### 👤 Student Profile")
 
     age = st.slider(
-        "👤 Age",
+        "Age",
         15,
         22,
         18
     )
 
+    gender = st.selectbox(
+        "Gender",
+        ["Male", "Female"]
+    )
+
     studytime = st.slider(
-        "📖 Study Time",
+        "Study Time",
         1,
         4,
         2
     )
 
+with col2:
+
+    st.markdown("### 📚 Academic Information")
+
     failures = st.slider(
-        "❌ Previous Failures",
+        "Previous Failures",
         0,
         4,
         0
     )
 
-with col2:
-
-    st.markdown("## 📅 Attendance & Grades")
-
     absences = st.slider(
-        "📅 Number of Absences",
+        "Absences",
         0,
         50,
         5
     )
 
+    schoolsup = st.selectbox(
+        "School Support",
+        ["Yes", "No"]
+    )
+
+with col3:
+
+    st.markdown("### 🌐 Support & Performance")
+
+    internet = st.selectbox(
+        "Internet Access",
+        ["Yes", "No"]
+    )
+
+    famsup = st.selectbox(
+        "Family Support",
+        ["Yes", "No"]
+    )
+
     g1 = st.slider(
-        "📝 G1 Grade",
+        "G1 Grade",
         0,
         20,
         10
     )
 
     g2 = st.slider(
-        "📝 G2 Grade",
+        "G2 Grade",
         0,
         20,
         10
@@ -146,7 +162,7 @@ with col2:
 st.write("")
 
 # ==========================
-# Predict Button
+# Prediction Button
 # ==========================
 
 if st.button(
@@ -158,6 +174,8 @@ if st.button(
         feature: 0
         for feature in features
     }
+
+    # Numerical Features
 
     if "age" in data:
         data["age"] = age
@@ -176,6 +194,20 @@ if st.button(
 
     if "G2" in data:
         data["G2"] = g2
+
+    # Categorical Features
+
+    if "sex" in data:
+        data["sex"] = 1 if gender == "Male" else 0
+
+    if "internet" in data:
+        data["internet"] = 1 if internet == "Yes" else 0
+
+    if "famsup" in data:
+        data["famsup"] = 1 if famsup == "Yes" else 0
+
+    if "schoolsup" in data:
+        data["schoolsup"] = 1 if schoolsup == "Yes" else 0
 
     input_df = pd.DataFrame([data])
 
@@ -225,7 +257,7 @@ if st.button(
     st.progress(int(risk_percent))
 
     # ==========================
-    # Risk Status
+    # Risk Analysis
     # ==========================
 
     if risk_percent < 30:
@@ -238,8 +270,6 @@ if st.button(
         """, unsafe_allow_html=True)
 
         st.info("""
-Student is currently performing well.
-
 Recommendations:
 
 • Maintain good attendance
