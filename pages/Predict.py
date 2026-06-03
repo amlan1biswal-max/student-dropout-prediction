@@ -31,6 +31,14 @@ color:white;
 margin-bottom:25px;
 }
 
+.section-card{
+background:#f8fafc;
+padding:20px;
+border-radius:15px;
+margin-bottom:20px;
+border:1px solid #e2e8f0;
+}
+
 .risk-low{
 background:#dcfce7;
 padding:20px;
@@ -67,11 +75,11 @@ st.markdown("""
 
 <h1>🎓 Student Dropout Prediction System</h1>
 
-<h3>XGBoost Based Machine Learning Model</h3>
+<h3>XGBoost Machine Learning Model</h3>
 
 <p>
 Predict whether a student is at risk of dropping out
-using academic performance, attendance and support information.
+using academic performance, attendance and support factors.
 </p>
 
 </div>
@@ -83,7 +91,11 @@ using academic performance, attendance and support information.
 
 st.subheader("📋 Student Information")
 
-col1, col2, col3 = st.columns(3)
+col1, col2 = st.columns(2)
+
+# ==========================
+# LEFT SIDE
+# ==========================
 
 with col1:
 
@@ -101,16 +113,37 @@ with col1:
         ["Male", "Female"]
     )
 
+    st.markdown("### 🌐 Support Factors")
+
+    internet = st.selectbox(
+        "Internet Access",
+        ["Yes", "No"]
+    )
+
+    famsup = st.selectbox(
+        "Family Support",
+        ["Yes", "No"]
+    )
+
+    schoolsup = st.selectbox(
+        "School Support",
+        ["Yes", "No"]
+    )
+
+# ==========================
+# RIGHT SIDE
+# ==========================
+
+with col2:
+
+    st.markdown("### 📚 Academic Details")
+
     studytime = st.slider(
         "Study Time",
         1,
         4,
         2
     )
-
-with col2:
-
-    st.markdown("### 📚 Academic Information")
 
     failures = st.slider(
         "Previous Failures",
@@ -124,25 +157,6 @@ with col2:
         0,
         50,
         5
-    )
-
-    schoolsup = st.selectbox(
-        "School Support",
-        ["Yes", "No"]
-    )
-
-with col3:
-
-    st.markdown("### 🌐 Support & Performance")
-
-    internet = st.selectbox(
-        "Internet Access",
-        ["Yes", "No"]
-    )
-
-    famsup = st.selectbox(
-        "Family Support",
-        ["Yes", "No"]
     )
 
     g1 = st.slider(
@@ -216,9 +230,18 @@ if st.button(
     probability = model.predict_proba(input_df)[0][1]
 
     risk_percent = round(
-        probability * 100,
+        float(probability * 100),
         2
     )
+
+    if risk_percent < 30:
+        level = "LOW"
+
+    elif risk_percent < 70:
+        level = "MEDIUM"
+
+    else:
+        level = "HIGH"
 
     st.divider()
 
@@ -228,30 +251,20 @@ if st.button(
 
     with col1:
         st.metric(
-            "🎯 Dropout Risk",
+            "🎯 Risk Score",
             f"{risk_percent:.2f}%"
         )
 
     with col2:
         st.metric(
-            "🤖 Model Accuracy",
-            "92.41%"
+            "⚡ Risk Level",
+            level
         )
 
     with col3:
-
-        if risk_percent < 30:
-            level = "LOW"
-
-        elif risk_percent < 70:
-            level = "MEDIUM"
-
-        else:
-            level = "HIGH"
-
         st.metric(
-            "⚡ Risk Level",
-            level
+            "🤖 Model Accuracy",
+            "92.41%"
         )
 
     st.progress(int(risk_percent))
@@ -270,6 +283,8 @@ if st.button(
         """, unsafe_allow_html=True)
 
         st.info("""
+Student is currently performing well.
+
 Recommendations:
 
 • Maintain good attendance
