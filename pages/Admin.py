@@ -1,269 +1,248 @@
 import streamlit as st
+import joblib
+import pandas as pd
+import plotly.express as px
 
 st.set_page_config(
-    page_title="Student Dropout Prediction System",
-    page_icon="🎓",
+    page_title="Admin Dashboard",
+    page_icon="⚙️",
     layout="wide"
 )
 
 # ==========================
-# CUSTOM CSS
+# LOAD DATA
+# ==========================
+
+model = joblib.load("model.pkl")
+features = joblib.load("features.pkl")
+
+df = pd.read_csv("data.csv", sep=";")
+
+# ==========================
+# CSS
 # ==========================
 
 st.markdown("""
 <style>
 
-.stApp{
-background:linear-gradient(to right,#f8fafc,#eef2ff);
-}
-
 .hero{
-background:linear-gradient(135deg,#0f172a,#2563eb,#7c3aed);
-padding:70px;
-border-radius:25px;
-text-align:center;
-color:white;
-margin-bottom:30px;
-box-shadow:0px 10px 30px rgba(0,0,0,0.2);
-}
-
-.metric-box{
-background:white;
-padding:25px;
+background:linear-gradient(135deg,#0f172a,#2563eb);
+padding:35px;
 border-radius:20px;
 text-align:center;
-box-shadow:0px 6px 20px rgba(0,0,0,0.1);
-margin-bottom:15px;
+color:white;
+margin-bottom:25px;
 }
 
-.feature-box{
+.metric-card{
 background:white;
 padding:20px;
 border-radius:15px;
 box-shadow:0px 4px 15px rgba(0,0,0,0.08);
-margin-bottom:10px;
-}
-
-.footer{
 text-align:center;
-padding:30px;
-border-radius:20px;
-background:white;
-box-shadow:0px 4px 15px rgba(0,0,0,0.08);
-margin-top:30px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 # ==========================
-# HERO SECTION
+# HEADER
 # ==========================
 
 st.markdown("""
-<div class='hero'>
+<div class="hero">
 
-<h1>🎓 Student Dropout Prediction System</h1>
+<h1>⚙️ Admin Dashboard</h1>
 
-<h3>🤖 AI Powered Educational Analytics Platform</h3>
+<h3>Student Dropout Prediction System</h3>
 
-<p style="font-size:18px;">
-Predict student dropout risk using Machine Learning,
-academic performance analysis and intelligent risk assessment.
+<p>
+Monitor model performance, feature importance,
+dataset statistics and project analytics.
 </p>
-
-<br>
-
-<span style="
-background:rgba(255,255,255,0.2);
-padding:12px 20px;
-border-radius:25px;
-margin:5px;
-font-weight:bold;">
-🎯 89.39% Accuracy
-</span>
-
-<span style="
-background:rgba(255,255,255,0.2);
-padding:12px 20px;
-border-radius:25px;
-margin:5px;
-font-weight:bold;">
-👨‍🎓 4424 Students
-</span>
-
-<span style="
-background:rgba(255,255,255,0.2);
-padding:12px 20px;
-border-radius:25px;
-margin:5px;
-font-weight:bold;">
-🌲 Random Forest
-</span>
 
 </div>
 """, unsafe_allow_html=True)
 
 # ==========================
-# KPI CARDS
+# METRICS
 # ==========================
 
-col1, col2, col3, col4 = st.columns(4)
-
-with col1:
-    st.markdown("""
-    <div class='metric-box'>
-    <h4>🎯 Accuracy</h4>
-    <h2>89.39%</h2>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown("""
-    <div class='metric-box'>
-    <h4>👨‍🎓 Students</h4>
-    <h2>4424</h2>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    st.markdown("""
-    <div class='metric-box'>
-    <h4>📊 Features</h4>
-    <h2>10</h2>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col4:
-    st.markdown("""
-    <div class='metric-box'>
-    <h4>🤖 Model</h4>
-    <h2>Random Forest</h2>
-    </div>
-    """, unsafe_allow_html=True)
-
-st.divider()
-
-# ==========================
-# PROJECT OVERVIEW
-# ==========================
-
-st.subheader("📖 Project Overview")
-
-st.markdown("""
-The **Student Dropout Prediction System** is a Machine Learning project
-developed to identify students who are at risk of dropping out.
-
-The system analyzes:
-
-- Admission Grade
-- Academic Performance
-- Scholarship Status
-- Tuition Fee Status
-- Semester Results
-- Student Demographics
-
-Educational institutions can use this platform for
-early intervention and academic support.
-""")
-
-st.divider()
-
-# ==========================
-# FEATURES
-# ==========================
-
-st.subheader("🚀 Key Features")
-
-c1, c2 = st.columns(2)
+c1,c2,c3,c4 = st.columns(4)
 
 with c1:
-    st.info("🎯 Student Risk Prediction")
-    st.info("📊 Interactive Dashboard")
-    st.info("📈 Academic Performance Analysis")
-    st.info("📚 Student Monitoring")
+    st.metric(
+        "🤖 Model",
+        "Random Forest"
+    )
 
 with c2:
-    st.info("🤖 Random Forest Classifier")
-    st.info("📉 Feature Importance Analysis")
-    st.info("⚠️ Early Risk Detection")
-    st.info("🌐 Streamlit Web Application")
+    st.metric(
+        "🎯 Accuracy",
+        "89.39%"
+    )
+
+with c3:
+    st.metric(
+        "📊 Features",
+        len(features)
+    )
+
+with c4:
+    st.metric(
+        "👨‍🎓 Students",
+        len(df)
+    )
 
 st.divider()
 
 # ==========================
-# PROJECT HIGHLIGHTS
+# DATASET INFO
 # ==========================
 
-st.subheader("📊 Project Highlights")
+st.subheader("📋 Dataset Information")
 
-col1, col2, col3, col4 = st.columns(4)
+info_df = pd.DataFrame({
+    "Metric":[
+        "Total Records",
+        "Features Used",
+        "Model Type",
+        "Accuracy"
+    ],
+    "Value":[
+        len(df),
+        len(features),
+        "Random Forest",
+        "89.39%"
+    ]
+})
 
-with col1:
-    st.success("👨‍🎓 4424 Students")
-
-with col2:
-    st.success("📈 10 Features")
-
-with col3:
-    st.success("🌲 Random Forest")
-
-with col4:
-    st.success("🚀 Live Dashboard")
+st.dataframe(
+    info_df,
+    use_container_width=True
+)
 
 st.divider()
 
 # ==========================
-# WORKFLOW
+# FEATURE IMPORTANCE
 # ==========================
 
-st.subheader("⚙️ System Workflow")
+st.subheader("📈 Feature Importance")
 
-st.markdown("""
-### 1️⃣ Student Data Collection
+importance = model.feature_importances_
 
-⬇️
+importance_df = pd.DataFrame({
+    "Feature":features,
+    "Importance":importance
+})
 
-### 2️⃣ Data Preprocessing
+importance_df = importance_df.sort_values(
+    by="Importance",
+    ascending=False
+)
 
-⬇️
+st.dataframe(
+    importance_df,
+    use_container_width=True
+)
 
-### 3️⃣ Machine Learning Training
+fig = px.bar(
+    importance_df,
+    x="Importance",
+    y="Feature",
+    orientation="h",
+    title="Feature Importance Ranking"
+)
 
-⬇️
+st.plotly_chart(
+    fig,
+    use_container_width=True
+)
 
-### 4️⃣ Risk Prediction
+st.divider()
 
-⬇️
+# ==========================
+# TOP RISK FACTORS
+# ==========================
 
-### 5️⃣ Student Analytics
+st.subheader("🚨 Top Risk Factors")
 
-⬇️
+for index,row in importance_df.head(5).iterrows():
 
-### 6️⃣ Early Intervention Support
+    st.success(
+        f"{row['Feature']} → {row['Importance']:.4f}"
+    )
+
+st.divider()
+
+# ==========================
+# TARGET ANALYSIS
+# ==========================
+
+st.subheader("📊 Student Status Distribution")
+
+target_counts = (
+    df["Target"]
+    .value_counts()
+    .reset_index()
+)
+
+target_counts.columns = [
+    "Status",
+    "Students"
+]
+
+fig2 = px.pie(
+    target_counts,
+    values="Students",
+    names="Status",
+    title="Graduate vs Dropout vs Enrolled"
+)
+
+st.plotly_chart(
+    fig2,
+    use_container_width=True
+)
+
+st.divider()
+
+# ==========================
+# MODEL NOTES
+# ==========================
+
+st.subheader("📝 Model Notes")
+
+st.info("""
+Model: Random Forest Classifier
+
+Dataset Size: 4424 Records
+
+Selected Features: 10
+
+Accuracy: 89.39%
+
+Purpose:
+Identify students who are at risk of dropping out
+and support early intervention strategies.
 """)
 
-st.divider()
-
 # ==========================
-# WHY THIS PROJECT
+# SYSTEM STATUS
 # ==========================
 
-st.subheader("🎯 Why This Project Matters")
+st.subheader("🟢 System Status")
 
-st.warning("""
-Student dropout is a major challenge for educational institutions.
+st.success("""
+✅ Model Loaded Successfully
 
-This system helps identify at-risk students early,
-allowing educators to take proactive measures such as:
+✅ Features Loaded Successfully
 
-• Academic Mentoring
+✅ Dataset Loaded Successfully
 
-• Financial Support
+✅ Prediction System Active
 
-• Performance Monitoring
-
-• Student Counseling
+✅ Dashboard Running
 """)
 
 # ==========================
@@ -271,18 +250,22 @@ allowing educators to take proactive measures such as:
 # ==========================
 
 st.markdown("""
-<div class='footer'>
+---
 
-<h2>🎓 Student Dropout Prediction System</h2>
+### 🎓 Student Dropout Prediction System
 
-<p>
-Built using Python, Streamlit, Random Forest,
-Scikit-Learn and Plotly
-</p>
+Admin Analytics Dashboard
 
-<p>
-Machine Learning for Educational Analytics
-</p>
+Built using:
 
-</div>
-""", unsafe_allow_html=True)
+✅ Python
+
+✅ Streamlit
+
+✅ Random Forest
+
+✅ Plotly
+
+✅ Machine Learning
+""")
+
