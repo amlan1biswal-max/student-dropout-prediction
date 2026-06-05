@@ -1,43 +1,140 @@
 import streamlit as st
 import joblib
 import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.express as px
 
 st.set_page_config(
     page_title="Admin Dashboard",
+    page_icon="⚙️",
     layout="wide"
 )
 
-st.title("⚙️ Admin Dashboard")
+# ==========================
+# LOAD DATA
+# ==========================
 
-# Load model
 model = joblib.load("model.pkl")
 features = joblib.load("features.pkl")
 
-# Project Summary
-st.subheader("📌 Project Information")
+df = pd.read_csv("data.csv", sep=";")
 
-col1, col2, col3 = st.columns(3)
+# ==========================
+# CSS
+# ==========================
 
-with col1:
-    st.metric("Model", "XGBoost")
+st.markdown("""
+<style>
 
-with col2:
-    st.metric("Accuracy", "92.41%")
+.hero{
+background:linear-gradient(135deg,#0f172a,#2563eb);
+padding:35px;
+border-radius:20px;
+text-align:center;
+color:white;
+margin-bottom:25px;
+}
 
-with col3:
-    st.metric("Features", len(features))
+.metric-card{
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0px 4px 15px rgba(0,0,0,0.08);
+text-align:center;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ==========================
+# HEADER
+# ==========================
+
+st.markdown("""
+<div class="hero">
+
+<h1>⚙️ Admin Dashboard</h1>
+
+<h3>Student Dropout Prediction System</h3>
+
+<p>
+Monitor model performance, feature importance,
+dataset statistics and project analytics.
+</p>
+
+</div>
+""", unsafe_allow_html=True)
+
+# ==========================
+# METRICS
+# ==========================
+
+c1,c2,c3,c4 = st.columns(4)
+
+with c1:
+    st.metric(
+        "🤖 Model",
+        "Random Forest"
+    )
+
+with c2:
+    st.metric(
+        "🎯 Accuracy",
+        "89.39%"
+    )
+
+with c3:
+    st.metric(
+        "📊 Features",
+        len(features)
+    )
+
+with c4:
+    st.metric(
+        "👨‍🎓 Students",
+        len(df)
+    )
 
 st.divider()
 
-# Feature Importance
-st.subheader("📊 Feature Importance")
+# ==========================
+# DATASET INFO
+# ==========================
+
+st.subheader("📋 Dataset Information")
+
+info_df = pd.DataFrame({
+    "Metric":[
+        "Total Records",
+        "Features Used",
+        "Model Type",
+        "Accuracy"
+    ],
+    "Value":[
+        len(df),
+        len(features),
+        "Random Forest",
+        "89.39%"
+    ]
+})
+
+st.dataframe(
+    info_df,
+    use_container_width=True
+)
+
+st.divider()
+
+# ==========================
+# FEATURE IMPORTANCE
+# ==========================
+
+st.subheader("📈 Feature Importance")
 
 importance = model.feature_importances_
 
 importance_df = pd.DataFrame({
-    "Feature": features,
-    "Importance": importance
+    "Feature":features,
+    "Importance":importance
 })
 
 importance_df = importance_df.sort_values(
@@ -46,41 +143,128 @@ importance_df = importance_df.sort_values(
 )
 
 st.dataframe(
-    importance_df.head(10),
+    importance_df,
     use_container_width=True
 )
 
-# Chart
-fig, ax = plt.subplots(figsize=(10,5))
-
-ax.bar(
-    importance_df["Feature"][:10],
-    importance_df["Importance"][:10]
+fig = px.bar(
+    importance_df,
+    x="Importance",
+    y="Feature",
+    orientation="h",
+    title="Feature Importance Ranking"
 )
 
-plt.xticks(rotation=45)
-
-st.pyplot(fig)
+st.plotly_chart(
+    fig,
+    use_container_width=True
+)
 
 st.divider()
 
-# Top Risk Factors
+# ==========================
+# TOP RISK FACTORS
+# ==========================
+
 st.subheader("🚨 Top Risk Factors")
 
-for i, row in importance_df.head(5).iterrows():
-    st.write(
-        f"✅ {row['Feature']} → Importance: {row['Importance']:.4f}"
+for index,row in importance_df.head(5).iterrows():
+
+    st.success(
+        f"{row['Feature']} → {row['Importance']:.4f}"
     )
 
 st.divider()
 
-# Model Notes
+# ==========================
+# TARGET ANALYSIS
+# ==========================
+
+st.subheader("📊 Student Status Distribution")
+
+target_counts = (
+    df["Target"]
+    .value_counts()
+    .reset_index()
+)
+
+target_counts.columns = [
+    "Status",
+    "Students"
+]
+
+fig2 = px.pie(
+    target_counts,
+    values="Students",
+    names="Status",
+    title="Graduate vs Dropout vs Enrolled"
+)
+
+st.plotly_chart(
+    fig2,
+    use_container_width=True
+)
+
+st.divider()
+
+# ==========================
+# MODEL NOTES
+# ==========================
+
 st.subheader("📝 Model Notes")
 
 st.info("""
-This model uses XGBoost Classification
-to predict students at risk of dropping out.
+Model: Random Forest Classifier
 
-Higher importance features have
-greater impact on predictions.
+Dataset Size: 4424 Records
+
+Selected Features: 10
+
+Accuracy: 89.39%
+
+Purpose:
+Identify students who are at risk of dropping out
+and support early intervention strategies.
+""")
+
+# ==========================
+# SYSTEM STATUS
+# ==========================
+
+st.subheader("🟢 System Status")
+
+st.success("""
+✅ Model Loaded Successfully
+
+✅ Features Loaded Successfully
+
+✅ Dataset Loaded Successfully
+
+✅ Prediction System Active
+
+✅ Dashboard Running
+""")
+
+# ==========================
+# FOOTER
+# ==========================
+
+st.markdown("""
+---
+
+### 🎓 Student Dropout Prediction System
+
+Admin Analytics Dashboard
+
+Built using:
+
+✅ Python
+
+✅ Streamlit
+
+✅ Random Forest
+
+✅ Plotly
+
+✅ Machine Learning
 """)

@@ -7,7 +7,7 @@ st.set_page_config(
 )
 
 # ==========================
-# Custom CSS
+# CSS
 # ==========================
 
 st.markdown("""
@@ -22,107 +22,192 @@ color:white;
 margin-bottom:25px;
 }
 
+.card{
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0px 4px 15px rgba(0,0,0,0.08);
+margin-bottom:15px;
+}
+
 .dev-card{
 background:#f8fafc;
 padding:20px;
 border-radius:15px;
 text-align:center;
-box-shadow:0px 2px 8px rgba(0,0,0,0.1);
+box-shadow:0px 2px 10px rgba(0,0,0,0.08);
 margin-bottom:15px;
 }
 
 .footer{
 text-align:center;
 padding:20px;
-color:gray;
+color:#666;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 # ==========================
-# Header
+# HEADER
 # ==========================
 
 st.markdown("""
 <div class="hero">
 
-<h1>👨‍💻 About The Project</h1>
+<h1>🎓 Student Dropout Prediction System</h1>
+
+<h3>Machine Learning Based Educational Analytics Project</h3>
 
 <p>
-Student Dropout Prediction System
+Predicting students at risk of dropping out using
+academic performance and demographic factors.
 </p>
 
 </div>
 """, unsafe_allow_html=True)
 
 # ==========================
-# Project Description
+# PROJECT OVERVIEW
 # ==========================
 
 st.subheader("📖 Project Overview")
 
-st.write("""
+st.markdown("""
+<div class="card">
+
 The Student Dropout Prediction System is a Machine Learning project
-developed to identify students who are at risk of dropping out.
+designed to identify students who are at risk of dropping out from
+higher education institutions.
 
-The project uses academic performance, attendance records and
-student information to predict dropout risk.
+The system analyzes academic performance, financial status,
+scholarship information, semester grades, and enrollment data
+to estimate dropout risk.
 
-An XGBoost Machine Learning model is used to generate predictions
-with high accuracy.
+This solution can help educational institutions perform
+early intervention and improve student success rates.
+
+</div>
+""", unsafe_allow_html=True)
+
+st.divider()
+
+# ==========================
+# TECHNOLOGIES
+# ==========================
+
+st.subheader("🛠 Technologies Used")
+
+c1,c2,c3,c4,c5 = st.columns(5)
+
+with c1:
+    st.info("🐍 Python")
+
+with c2:
+    st.info("📊 Streamlit")
+
+with c3:
+    st.info("🤖 Random Forest")
+
+with c4:
+    st.info("📈 Scikit-Learn")
+
+with c5:
+    st.info("📉 Plotly")
+
+st.divider()
+
+# ==========================
+# PROJECT HIGHLIGHTS
+# ==========================
+
+st.subheader("📊 Project Highlights")
+
+col1,col2,col3,col4 = st.columns(4)
+
+with col1:
+    st.success("🎯 Accuracy: 89.39%")
+
+with col2:
+    st.success("👨‍🎓 Dataset: 4424 Students")
+
+with col3:
+    st.success("📊 Features: 10")
+
+with col4:
+    st.success("🤖 Random Forest")
+
+st.divider()
+
+# ==========================
+# KEY FEATURES
+# ==========================
+
+st.subheader("🚀 System Features")
+
+st.success("""
+✅ Student Dropout Risk Prediction
+
+✅ Interactive Analytics Dashboard
+
+✅ Feature Importance Analysis
+
+✅ Confusion Matrix Visualization
+
+✅ Academic Performance Monitoring
+
+✅ Real-Time Risk Assessment
+
+✅ Educational Analytics
 """)
 
 st.divider()
 
 # ==========================
-# Technologies Used
+# DATASET INFORMATION
 # ==========================
 
-st.subheader("🛠 Technologies Used")
+st.subheader("📚 Dataset Information")
 
-col1, col2, col3, col4 = st.columns(4)
+st.markdown("""
+<div class="card">
 
-with col1:
-    st.info("🐍 Python")
+<b>Dataset:</b> Predict Students' Dropout and Academic Success Dataset
 
-with col2:
-    st.info("📊 Streamlit")
+<br><br>
 
-with col3:
-    st.info("🤖 XGBoost")
+<b>Total Records:</b> 4424 Students
 
-with col4:
-    st.info("📈 Scikit-Learn")
+<br><br>
+
+<b>Original Features:</b> 36
+
+<br><br>
+
+<b>Selected Features Used:</b> 10
+
+<br><br>
+
+<b>Target Classes:</b>
+
+• Graduate
+
+• Dropout
+
+• Enrolled
+
+</div>
+""", unsafe_allow_html=True)
 
 st.divider()
 
 # ==========================
-# Project Statistics
-# ==========================
-
-st.subheader("📊 Project Highlights")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.success("🎯 Accuracy: 92.41%")
-
-with col2:
-    st.success("📚 Dataset: 395 Students")
-
-with col3:
-    st.success("🤖 Model: XGBoost")
-
-st.divider()
-
-# ==========================
-# Development Team
+# DEVELOPMENT TEAM
 # ==========================
 
 st.subheader("👨‍💻 Development Team")
 
-col1, col2 = st.columns(2)
+col1,col2 = st.columns(2)
 
 with col1:
 
@@ -158,7 +243,7 @@ with col2:
 
     st.markdown("""
     <div class="dev-card">
-    <h3>Priyanshu Priyadarshani Choudhury</h3>
+    <h3>Priyansu Priyadarshani Choudhury</h3>
     <p>Project Developer</p>
     </div>
     """, unsafe_allow_html=True)
@@ -166,21 +251,38 @@ with col2:
 st.divider()
 
 # ==========================
-# Footer
+# PROJECT OBJECTIVE
+# ==========================
+
+st.subheader("🎯 Project Objective")
+
+st.info("""
+The goal of this project is to identify students who may
+be at risk of dropping out and support educational institutions
+in making data-driven decisions for early intervention,
+academic mentoring, and student success improvement.
+""")
+
+# ==========================
+# FOOTER
 # ==========================
 
 st.markdown("""
 <div class="footer">
 
+<hr>
+
 <h3>🎓 Student Dropout Prediction System</h3>
 
 <p>
-Built using Python, Streamlit, Scikit-Learn and XGBoost
+Built using Python, Streamlit, Random Forest,
+Scikit-Learn and Plotly
 </p>
 
 <p>
-Made with ❤️ for Machine Learning & Educational Analytics
+Machine Learning for Educational Analytics
 </p>
 
 </div>
 """, unsafe_allow_html=True)
+
